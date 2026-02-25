@@ -1,20 +1,28 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🚀 Nexus Pro - Dashboard Administrativo
 
-# Run and deploy your AI Studio app
+**Nexus Pro** es una plataforma de análisis de datos y gestión de operaciones construida con tecnologías de última generación. Este proyecto demuestra el manejo de estados complejos, diseño responsivo y la implementación de las nuevas características de **Tailwind CSS v4**.
 
-This contains everything you need to run your app locally.
+[Ver Demo en Vivo](https://nexus-pro-dashboard-seven.vercel.app/)
 
-View your app in AI Studio: https://ai.studio/apps/36c7752e-8c5d-420c-9730-b2d9a7e9a674
+---
 
-## Run Locally
+## ✨ Características Principales
 
-**Prerequisites:**  Node.js
+- 🌓 **Modo Oscuro Inteligente**: Implementado con `@custom-variant` de Tailwind v4 para una transición suave.
+- 📊 **Gestión de Operaciones**: Sistema CRUD funcional para el manejo de transacciones en tiempo real.
+- 🔍 **Búsqueda Dinámica**: Filtrado avanzado de registros mediante estados de React.
+- 📱 **Diseño Adaptive**: Interfaz optimizada para resoluciones de escritorio, tablets y móviles.
+- 🎨 **UI/UX Refinada**: Uso de la librería Lucide React para una iconografía consistente y moderna.
 
+## 🛠️ Stack Tecnológico
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- **Framework:** [React.js](https://reactjs.org/) (Vite)
+- **Estilos:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **Iconos:** [Lucide React](https://lucide.dev/)
+- **Despliegue:** [Vercel](https://vercel.com/)
+
+## 🚀 Instalación Local
+
+1. Clona el repositorio:
+   ```bash
+   git clone [https://github.com/gerindiz/nexus-pro-dashboard.git](https://github.com/gerindiz/nexus-pro-dashboard.git)
