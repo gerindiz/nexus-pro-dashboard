@@ -1,48 +1,56 @@
 @import "tailwindcss";
 
-@theme {
-  --color-slate-950: #020617;
-}
-
-/* 1. Esto activa la variante 'dark' basada en la clase que pones con React */
+/* 1. CONFIGURACIÓN DEL MODO OSCURO */
+/* Esta variante permite que Tailwind v4 detecte la clase .dark en el HTML */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* 2. Estilos base para el modo claro y oscuro */
-:root {
-  background-color: #f8fafc; /* bg-slate-50 */
-  color: #0f172a; /* text-slate-900 */
+@theme {
+  --color-brand: #6366f1;
 }
 
-.dark {
-  background-color: #020617; /* bg-slate-950 */
-  color: #f1f5f9; /* text-slate-100 */
+/* 2. ESTILOS BASE (Humanizados y Pro) */
+@layer base {
+  :root {
+    background-color: #f8fafc; /* bg-slate-50 */
+    color: #0f172a; /* text-slate-900 */
+    /* Esto hace que el cambio entre claro y oscuro no sea un golpe brusco */
+    transition-property: background-color, border-color, color;
+    transition-duration: 300ms;
+  }
+
+  .dark {
+    background-color: #020617; /* bg-slate-950 */
+    color: #f1f5f9; /* text-slate-100 */
+  }
+
+  /* Asegura que los textos en modo oscuro sean legibles */
+  .dark body {
+    @apply antialiased;
+  }
 }
 
-/* 3. Forzar que las tarjetas (Cards) cambien de color */
-/* Esto es lo que hará que el Dashboard se vea profesional */
-.dark .bg-white {
-  background-color: #0f172a !important; /* bg-slate-900 */
-  border-color: #1e293b !important; /* border-slate-800 */
+/* 3. UTILIDADES PERSONALIZADAS */
+/* Scrollbar Pro: se adapta al color del tema */
+@utility custom-scroll {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-slate-200);
+    border-radius: 9999px;
+  }
 }
 
-.dark .text-slate-900 {
-  color: #ffffff !important;
-}
-
-.dark .text-slate-500 {
-  color: #94a3b8 !important; /* text-slate-400 */
-}
-
-/* Scrollbar */
-.custom-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-.custom-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scroll::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 rounded-full;
-}
 .dark .custom-scroll::-webkit-scrollbar-thumb {
-  @apply bg-slate-800;
+  background-color: var(--color-slate-800);
+}
+
+/* 4. FIX PARA TARJETAS (Opcional pero recomendado) */
+/* Si alguna card no cambia automáticamente, esto lo asegura */
+.dark .bg-white {
+  background-color: var(--color-slate-900);
+  border-color: var(--color-slate-800);
 }

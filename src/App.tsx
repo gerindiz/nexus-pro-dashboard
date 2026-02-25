@@ -1,18 +1,19 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { useState } from 'react';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
 
-export default function App() {
-  const [searchTerm, setSearchTerm] = useState('');
+/**
+ * App Component
+ * Maneja el estado global de búsqueda y la estructura principal del sitio.
+ */
+function App() {
+  const [query, setQuery] = useState('');
 
   return (
-    <Layout searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
-      <Dashboard searchTerm={searchTerm} />
+    <Layout searchTerm={query} setSearchTerm={setQuery}>
+      <Dashboard searchTerm={query} />
     </Layout>
   );
 }
+
+export default App;
