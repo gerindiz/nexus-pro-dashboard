@@ -53,4 +53,7 @@ npm run dev
 ---
 
 📧 Contacto
-Desarrollado por German Rindizbacher  LinkedIn | GitHub
+Desarrollado por ---
+
+## 📧 Contacto
+Desarrollado por **Gerindiz** - [LinkedIn](https://www.linkedin.com/in/tu-perfil) | [GitHub](https://github.com/gerindiz)
