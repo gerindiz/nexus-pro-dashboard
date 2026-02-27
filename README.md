@@ -56,4 +56,4 @@ npm run dev
 Desarrollado por ---
 
 ## 📧 Contacto
-Desarrollado por **Gerindiz** - [LinkedIn](https://www.linkedin.com/in/tu-perfil) | [GitHub](https://github.com/gerindiz)
+Desarrollado por **Gerindiz** - [LinkedIn](https://www.linkedin.com/in/grindiz1989/) | [GitHub](https://github.com/gerindiz)
