@@ -32,9 +32,11 @@ Si quieres probar este proyecto localmente, sigue estos pasos:
 1. **Clonar el repositorio:**
    ```bash
    git clone [https://github.com/gerindiz/nexus-pro-dashboard.git](https://github.com/gerindiz/nexus-pro-dashboard.git)
-2. Instalar dependencias:
-   npm install
-3   Configurar variables de entorno:
+Instalar dependencias:
+
+Bash
+npm install
+Configurar variables de entorno:
 Crea un archivo .env.local en la raíz y agrega tus llaves de Supabase:
 
 Fragmento de código
@@ -45,16 +47,4 @@ Correr el proyecto:
 Bash
 npm run dev
 📧 Contacto
-Desarrollado por [German Rindizbacher] - LinkedIn | GitHub
-
-
----
-
-### 🛠️ Paso 2: Sube los cambios
-Una vez que guardes el archivo en VS Code, haz lo siguiente en la terminal:
-
-1. `git add .`
-2. `git commit -m "docs: mejorar estructura y enlaces del README"`
-3. `git push`
-
----
+Desarrollado por [Tu Nombre] - LinkedIn | GitHub
