@@ -25,4 +25,4 @@
 
 1. Clona el repositorio:
    ```bash
-   git clone [https://github.com/gerindiz/nexus-pro-dashboard.git](https://github.com/gerindiz/nexus-pro-dashboard.git)
+   git clone git clone https://github.com/gerindiz/nexus-pro-dashboard.git
