@@ -31,3 +31,64 @@ Si deseas ejecutar este proyecto localmente para desarrollo:
 1. **Clonar el repositorio:**
    ```bash
    git clone [https://github.com/gerindiz/nexus-pro-dashboard.git](https://github.com/gerindiz/nexus-pro-dashboard.git)
+Gemini ha dicho
+Aquí tienes el código final y corregido para que lo copies y pegues directamente.
+
+Sobre tu duda de las carpetas y el orden: el archivo README.md es solo un documento de texto (como un folleto). Las carpetas y el orden real de tus archivos están en la página principal de tu repositorio. Al final de esta respuesta te explico cómo verlas.
+
+📝 Código para tu README.md (Copiar y pegar)
+Markdown
+# 🚀 Nexus Pro Dashboard
+
+Un panel de control financiero de alto rendimiento construido con **React**, **TypeScript** y **Tailwind CSS**, totalmente integrado con **Supabase** para la gestión de datos en tiempo real.
+
+---
+
+## 🔗 Enlaces Rápidos
+* **Demo en Vivo:** [Visitar Nexus Pro](https://panel-de-control-nexus-pro-seven.vercel.app/)
+* **Repositorio:** [GitHub Code](https://github.com/gerindiz/nexus-pro-dashboard)
+
+---
+
+## ✨ Características Principales
+* **Gestión de Transacciones:** CRUD completo conectado a base de datos PostgreSQL.
+* **Visualización Dinámica:** Gráficos e indicadores que se actualizan automáticamente al modificar datos.
+* **Diseño Premium:** Interfaz moderna y responsiva utilizando **Tailwind CSS v4**.
+* **Seguridad:** Manejo de variables de entorno para protección de API keys de Supabase.
+
+## 🛠️ Stack Tecnológico
+* **Frontend:** React 18 + Vite
+* **Lenguaje:** TypeScript
+* **Estilos:** Tailwind CSS v4
+* **Backend:** Supabase (Postgres)
+* **Deployment:** Vercel
+
+---
+
+## ⚙️ Guía para Desarrolladores (Setup Local)
+
+Si deseas ejecutar este proyecto localmente para desarrollo:
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [https://github.com/gerindiz/nexus-pro-dashboard.git](https://github.com/gerindiz/nexus-pro-dashboard.git)
+   
+Instalar dependencias:
+
+npm install
+
+Configurar variables de entorno:
+Crea un archivo .env.local en la raíz con tus llaves de Supabase:
+
+VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_ANON_KEY=tu_key_anonima
+
+
+Correr el proyecto:
+
+npm run dev
+
+---
+
+📧 Contacto
+Desarrollado por Gerindiz LinkedIn | GitHub
