@@ -18,7 +18,7 @@ Un panel de control financiero de alto rendimiento construido con **React**, **T
 ---
 
 ## 🔗 Enlaces Rápidos
-* **Demo en Vivo:** [Visitar Nexus Pro](https://panel-de-control-nexus-pro-seven.vercel.app/)
+* **Demo en Vivo:** [Visitar Nexus Pro](https://nexus-pro-dashboard-seven.vercel.app)
 * **Base de Datos:** PostgreSQL (Supabase)
 
 ---
