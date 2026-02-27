@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react'; // Agregamos useEffect
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
@@ -7,21 +7,23 @@ import {
   Activity, BarChart3, Settings, Trash2, X, Plus
 } from 'lucide-react';
 
+// IMPORTANTE: Importamos la conexión que creamos antes
+import { supabase } from '../lib/supabaseClient';
+
 // --- Types ---
 interface Transaction {
-  id: string;
-  user: string;
+  id: string | number; // Cambiamos a string | number por el ID de Supabase
+  user_name: string;   // Cambiado para coincidir con tu tabla de Supabase
   email: string;
   amount: number;
-  status: 'Success' | 'Warning' | 'Danger';
-  date: string;
+  status: string;
+  created_at?: string; 
 }
 
 interface DashboardProps {
   searchTerm: string;
 }
 
-// --- Mocks ---
 const REVENUE_HISTORY = [
   { name: 'Ene', value: 4000 }, { name: 'Feb', value: 3000 },
   { name: 'Mar', value: 5000 }, { name: 'Abr', value: 2780 },
@@ -29,43 +31,76 @@ const REVENUE_HISTORY = [
   { name: 'Jul', value: 3490 },
 ];
 
-const DEFAULT_TRANSACTIONS: Transaction[] = [
-  { id: 'tx_1', user: 'Julian Alvarez', email: 'j.alvarez@mail.com', amount: 450.00, status: 'Success', date: '2024-02-20' },
-  { id: 'tx_2', user: 'Martina Garcia', email: 'm.garcia@estudio.com', amount: 1200.00, status: 'Warning', date: '2024-02-19' },
-  { id: 'tx_3', user: 'Lucas Spinelli', email: 'l.spinelli@tech.io', amount: 85.20, status: 'Danger', date: '2024-02-18' },
-];
-
 export const Dashboard: React.FC<DashboardProps> = ({ searchTerm }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>(DEFAULT_TRANSACTIONS);
+  // Empezamos con la lista vacía hasta que carguen los datos de Supabase
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', amount: '' });
+  const [loading, setLoading] = useState(true);
 
-  const handleCreateTransaction = (e: React.FormEvent) => {
+  // --- 1. FUNCIÓN PARA TRAER DATOS (FETCH) ---
+  const fetchTransactions = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('*')
+      .order('id', { ascending: false }); // Los más nuevos arriba
+
+    if (error) {
+      console.error('Error al traer datos:', error.message);
+    } else {
+      setTransactions(data || []);
+    }
+    setLoading(false);
+  };
+
+  // Ejecutamos fetchTransactions al cargar el componente
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  // --- 2. FUNCIÓN PARA CREAR (INSERT) ---
+  const handleCreateTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.amount) return;
 
-    const newEntry: Transaction = {
-      id: `tx_${Date.now()}`, // Generación de ID más "humana"
-      user: formData.name,
-      email: `${formData.name.toLowerCase().split(' ')[0]}@custom.com`,
+    const newEntry = {
+      user_name: formData.name,
+      email: `${formData.name.toLowerCase().replace(/\s/g, '')}@custom.com`,
       amount: parseFloat(formData.amount),
       status: 'Success',
-      date: new Date().toISOString().split('T')[0]
     };
 
-    setTransactions(prev => [newEntry, ...prev]);
-    setFormData({ name: '', amount: '' });
-    setIsModalOpen(false);
+    const { error } = await supabase.from('transactions').insert([newEntry]);
+
+    if (error) {
+      alert("Error al guardar: " + error.message);
+    } else {
+      fetchTransactions(); // Recargamos la lista
+      setFormData({ name: '', amount: '' });
+      setIsModalOpen(false);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setTransactions(prev => prev.filter(t => t.id !== id));
+  // --- 3. FUNCIÓN PARA ELIMINAR (DELETE) ---
+  const handleDelete = async (id: string | number) => {
+    const { error } = await supabase
+      .from('transactions')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      alert("Error al eliminar: " + error.message);
+    } else {
+      // Actualizamos el estado local para que desaparezca rápido
+      setTransactions(prev => prev.filter(t => t.id !== id));
+    }
   };
 
   const filteredTransactions = useMemo(() => {
     const query = searchTerm.toLowerCase();
     return transactions.filter(t => 
-      t.user.toLowerCase().includes(query) ||
+      t.user_name.toLowerCase().includes(query) ||
       t.email.toLowerCase().includes(query)
     );
   }, [searchTerm, transactions]);
@@ -77,7 +112,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ searchTerm }) => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Panel de Control</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">Monitoreo de actividad y transacciones.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Conectado a Base de Datos Real.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -88,19 +123,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ searchTerm }) => {
         </button>
       </div>
 
-      {/* Stats */}
+      {/* Stats (Mantenemos tus componentes visuales) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Ingresos" value="$128.430" trend="+12%" isPositive icon={DollarSign} color="text-emerald-500" bg="bg-emerald-500/10" />
-        <StatCard title="Usuarios" value="2.420" trend="+8%" isPositive icon={Users} color="text-blue-500" bg="bg-blue-500/10" />
-        <StatCard title="Ventas" value="1.240" trend="-2%" isPositive={false} icon={ShoppingBag} color="text-indigo-500" bg="bg-indigo-500/10" />
-        <StatCard title="Uptime" value="99.9%" trend="+0.1%" isPositive icon={Activity} color="text-rose-500" bg="bg-rose-500/10" />
+        <StatCard title="Ingresos" value={`$${transactions.reduce((acc, t) => acc + t.amount, 0).toLocaleString()}`} trend="+12%" isPositive icon={DollarSign} color="text-emerald-500" bg="bg-emerald-500/10" />
+        <StatCard title="Usuarios" value={transactions.length.toString()} trend="+8%" isPositive icon={Users} color="text-blue-500" bg="bg-blue-500/10" />
+        <StatCard title="Ventas" value={transactions.length.toString()} trend="-2%" isPositive={false} icon={ShoppingBag} color="text-indigo-500" bg="bg-indigo-500/10" />
+        <StatCard title="Estado DB" value={loading ? "..." : "Online"} trend="OK" isPositive icon={Activity} color="text-rose-500" bg="bg-rose-500/10" />
       </div>
 
+      {/* Gráfico y Acciones Rápidas (Igual que antes) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors text-left">
           <h3 className="text-lg font-bold mb-6 dark:text-white">Flujo de Caja</h3>
-          <div className="h-[300px] w-full">
+          <div className="h-75 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={REVENUE_HISTORY}>
                 <defs>
@@ -119,7 +154,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ searchTerm }) => {
           </div>
         </div>
 
-        {/* Quick Actions */}
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors text-left">
           <h3 className="text-lg font-bold mb-6 dark:text-white">Acciones Rápidas</h3>
           <div className="space-y-4">
@@ -130,50 +164,54 @@ export const Dashboard: React.FC<DashboardProps> = ({ searchTerm }) => {
         </div>
       </div>
 
-      {/* Table */}
+      {/* Tabla con datos de Supabase */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors text-left">
         <div className="p-6 border-b border-slate-200 dark:border-slate-800">
           <h3 className="text-lg font-bold dark:text-white">Operaciones Recientes</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase">
-                <th className="px-6 py-4 text-left">Usuario</th>
-                <th className="px-6 py-4 text-left">Monto</th>
-                <th className="px-6 py-4 text-left">Estado</th>
-                <th className="px-6 py-4 text-right">Acción</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {filteredTransactions.map((t) => (
-                <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs">
-                        {t.user[0]}
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold dark:text-white">{t.user}</p>
-                        <p className="text-xs text-slate-400">{t.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-bold dark:text-white">${t.amount.toFixed(2)}</td>
-                  <td className="px-6 py-4"><Badge status={t.status} /></td>
-                  <td className="px-6 py-4 text-right">
-                    <button onClick={() => handleDelete(t.id)} className="text-slate-300 hover:text-rose-500 transition-colors">
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="p-10 text-center text-slate-500">Cargando base de datos...</div>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase">
+                  <th className="px-6 py-4 text-left">Usuario</th>
+                  <th className="px-6 py-4 text-left">Monto</th>
+                  <th className="px-6 py-4 text-left">Estado</th>
+                  <th className="px-6 py-4 text-right">Acción</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {filteredTransactions.map((t) => (
+                  <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs">
+                          {t.user_name[0]}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold dark:text-white">{t.user_name}</p>
+                          <p className="text-xs text-slate-400">{t.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm font-bold dark:text-white">${t.amount.toFixed(2)}</td>
+                    <td className="px-6 py-4"><Badge status={t.status} /></td>
+                    <td className="px-6 py-4 text-right">
+                      <button onClick={() => handleDelete(t.id)} className="text-slate-300 hover:text-rose-500 transition-colors">
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal (Igual que antes) */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 w-full max-w-md shadow-2xl border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
@@ -213,7 +251,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ searchTerm }) => {
   );
 };
 
-// --- Sub-components con Tipado Pro ---
+// --- Sub-componentes (Mantenemos tus componentes visuales) ---
 
 interface StatCardProps {
   title: string;
@@ -238,13 +276,13 @@ const StatCard = ({ title, value, trend, isPositive, icon: Icon, color, bg }: St
   </div>
 );
 
-const Badge = ({ status }: { status: 'Success' | 'Warning' | 'Danger' | string }) => {
-  const styles = {
+const Badge = ({ status }: { status: string }) => {
+  const styles: any = {
     Success: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
     Warning: "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
     Danger: "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",
   };
-  const currentStyle = styles[status as keyof typeof styles] || styles.Success;
+  const currentStyle = styles[status] || styles.Success;
   return <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${currentStyle}`}>{status}</span>;
 };
 
