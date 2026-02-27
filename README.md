@@ -3,6 +3,7 @@
 Un panel de control financiero de alto rendimiento construido con **React**, **TypeScript** y **Tailwind CSS**, totalmente integrado con **Supabase** para la gestión de datos en tiempo real.
 
 
+<img width="1908" height="933" alt="Captura de pantalla 2026-02-27 134957" src="https://github.com/user-attachments/assets/6b5a524a-eeb4-479a-9b57-6eb6059cb52b" />
 
 
 
