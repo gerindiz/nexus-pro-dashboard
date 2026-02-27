@@ -24,27 +24,10 @@ Un panel de control financiero de alto rendimiento construido con **React**, **T
 * **Deployment:** Vercel
 
 ---
+## ⚙️ Guía para Desarrolladores (Setup Local)
 
-## 💻 Instalación Local
-
-Si quieres probar este proyecto localmente, sigue estos pasos:
+Si deseas ejecutar este proyecto localmente para desarrollo:
 
 1. **Clonar el repositorio:**
    ```bash
    git clone [https://github.com/gerindiz/nexus-pro-dashboard.git](https://github.com/gerindiz/nexus-pro-dashboard.git)
-Instalar dependencias:
-
-Bash
-npm install
-Configurar variables de entorno:
-Crea un archivo .env.local en la raíz y agrega tus llaves de Supabase:
-
-Fragmento de código
-VITE_SUPABASE_URL=tu_url_aqui
-VITE_SUPABASE_ANON_KEY=tu_key_aqui
-Correr el proyecto:
-
-Bash
-npm run dev
-📧 Contacto
-Desarrollado por [Tu Nombre] - LinkedIn | GitHub
