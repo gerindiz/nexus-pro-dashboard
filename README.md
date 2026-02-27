@@ -41,7 +41,7 @@ npm install
 3. **Configurar variables de entorno:
 Crea un archivo .env.local en la raíz con tus llaves de Supabase:
 
-VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_URL=tu_url_de_supabase**
 VITE_SUPABASE_ANON_KEY=tu_key_anonima
 
 
